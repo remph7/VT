@@ -27,7 +27,6 @@
       cursor:none;
     }
 
-    /* Background canvas */
     #starfield{
       position:fixed;
       inset:0;
@@ -35,7 +34,6 @@
       pointer-events:none;
     }
 
-    /* Cursor */
     #cursor{
       position:fixed;
       width:10px;
@@ -59,7 +57,6 @@
       transform:translate(-50%,-50%);
     }
 
-    /* Dust */
     .dust{
       position:fixed;
       border-radius:50%;
@@ -100,21 +97,10 @@
       to{ width:320px; }
     }
 
-    /* HERO */
     #hero{
       text-align:center;
       overflow:hidden;
       position:relative;
-    }
-
-    .hero-eyebrow{
-      font-size:0.65rem;
-      letter-spacing:8px;
-      text-transform:uppercase;
-      color:var(--gold);
-      opacity:0;
-      animation:fadeUp 1s ease 0.2s forwards;
-      margin-bottom:0.6rem;
     }
 
     .hero-birthday{
@@ -149,17 +135,6 @@
       will-change:transform, opacity;
     }
 
-    .hero-sub{
-      font-family:'Cormorant Garamond',serif;
-      font-style:italic;
-      font-size:1.25rem;
-      color:rgba(240,230,200,0.58);
-      letter-spacing:2px;
-      opacity:0;
-      margin-top:1rem;
-      animation:fadeUp 1s ease 1.3s forwards;
-    }
-
     .hero-year{
       font-size:0.68rem;
       letter-spacing:6px;
@@ -170,60 +145,6 @@
       animation:fadeUp 1s ease 1.7s forwards;
     }
 
-    .scroll-cue{
-      position:absolute;
-      bottom:2.5rem;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:6px;
-      opacity:0;
-      animation:fadeUp 1s ease 2.1s forwards;
-    }
-
-    .scroll-cue span{
-      font-size:0.55rem;
-      letter-spacing:4px;
-      color:rgba(201,168,76,0.42);
-      text-transform:uppercase;
-    }
-
-    .scroll-line{
-      width:1px;
-      height:40px;
-      background:linear-gradient(to bottom,var(--gold),transparent);
-      animation:scrollPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes scrollPulse{
-      0%,100%{ transform:scaleY(1); opacity:0.5; }
-      50%{ transform:scaleY(1.3); opacity:1; }
-    }
-
-    /* Confetti */
-    .confetti{
-      position:fixed;
-      top:-20px;
-      width:10px;
-      height:18px;
-      opacity:0.9;
-      z-index:3;
-      pointer-events:none;
-      animation:confettiFall linear forwards;
-    }
-
-    @keyframes confettiFall{
-      0%{
-        transform:translateY(-20px) rotate(0deg);
-        opacity:1;
-      }
-      100%{
-        transform:translateY(110vh) rotate(760deg);
-        opacity:0.1;
-      }
-    }
-
-    /* POEM */
     #poem{
       max-width:700px;
       text-align:center;
@@ -269,7 +190,6 @@
       font-style:normal;
     }
 
-    /* MESSAGE */
     #message{
       max-width:620px;
       text-align:left;
@@ -336,7 +256,6 @@
       opacity:0.75;
     }
 
-    /* CLOSING */
     #closing{
       text-align:center;
     }
@@ -369,7 +288,6 @@
       animation:fadeUp 1s ease 0.25s forwards;
     }
 
-    /* Shared animations */
     @keyframes fadeUp{
       from{ opacity:0; transform:translateY(28px); }
       to{ opacity:1; transform:translateY(0); }
@@ -401,7 +319,6 @@
       }
     }
 
-    /* Ripple */
     .ripple{
       position:fixed;
       border-radius:50%;
@@ -417,7 +334,183 @@
       to{ width:120px; height:120px; opacity:0; }
     }
 
-    /* Mobile */
+    .confetti{
+      position:fixed;
+      top:-20px;
+      width:10px;
+      height:18px;
+      opacity:0.9;
+      z-index:3;
+      pointer-events:none;
+      animation:confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall{
+      0%{
+        transform:translateY(-20px) rotate(0deg);
+        opacity:1;
+      }
+      100%{
+        transform:translateY(110vh) rotate(760deg);
+        opacity:0.1;
+      }
+    }
+
+    #sender-note{
+      text-align:center;
+    }
+
+    .sender-note-wrap{
+      width:min(760px, 92vw);
+      margin:0 auto;
+    }
+
+    .sender-btn{
+      margin-top:0.5rem;
+      background:transparent;
+      color:var(--gold);
+      border:1px solid rgba(201,168,76,0.42);
+      padding:14px 26px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      font-size:0.66rem;
+      font-family:'Montserrat', sans-serif;
+      cursor:pointer;
+      transition:all 0.35s ease;
+    }
+
+    .sender-btn:hover{
+      background:rgba(201,168,76,0.06);
+      border-color:rgba(245,230,163,0.7);
+      transform:translateY(-1px);
+    }
+
+    .sender-panel{
+      max-height:0;
+      overflow:hidden;
+      opacity:0;
+      margin-top:1.5rem;
+      transition:max-height 0.7s ease, opacity 0.5s ease;
+      border:1px solid rgba(201,168,76,0.16);
+      background:rgba(201,168,76,0.03);
+      backdrop-filter:blur(2px);
+    }
+
+    .sender-panel.open{
+      max-height:700px;
+      opacity:1;
+      padding:2rem 1.5rem;
+    }
+
+    .sender-pass-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:0.9rem;
+    }
+
+    .sender-pass-input{
+      width:min(360px, 84vw);
+      padding:12px 14px;
+      background:#101010;
+      border:1px solid rgba(201,168,76,0.28);
+      color:#f0e6c8;
+      outline:none;
+      font-family:'Montserrat', sans-serif;
+      font-size:0.9rem;
+      text-align:center;
+    }
+
+    .sender-unlock-btn{
+      background:var(--gold);
+      color:#111;
+      border:none;
+      padding:12px 18px;
+      letter-spacing:1px;
+      cursor:pointer;
+      font-size:0.75rem;
+      text-transform:uppercase;
+    }
+
+    .sender-hint{
+      font-family:'Cormorant Garamond', serif;
+      font-style:italic;
+      font-size:1rem;
+      color:rgba(240,230,200,0.55);
+      margin-top:0.1rem;
+    }
+
+    .sender-compose-wrap{
+      display:none;
+      margin-top:0.5rem;
+      animation:fadeUp 0.7s ease forwards;
+    }
+
+    .sender-compose-wrap.open{
+      display:block;
+    }
+
+    .sender-textarea{
+      width:100%;
+      min-height:180px;
+      background:#0e0e0e;
+      border:1px solid rgba(201,168,76,0.25);
+      color:#f0e6c8;
+      padding:18px;
+      resize:vertical;
+      outline:none;
+      font-family:'Montserrat', sans-serif;
+      font-size:0.95rem;
+      line-height:1.8;
+    }
+
+    .sender-actions{
+      margin-top:1rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .sender-status{
+      color:rgba(240,230,200,0.58);
+      font-size:0.84rem;
+      text-align:left;
+    }
+
+    .sender-buttons{
+      display:flex;
+      gap:0.75rem;
+      flex-wrap:wrap;
+    }
+
+    .sender-send-btn,
+    .sender-secondary-btn{
+      padding:12px 20px;
+      background:transparent;
+      color:var(--gold);
+      border:1px solid rgba(201,168,76,0.42);
+      cursor:pointer;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      font-size:0.64rem;
+      transition:all 0.3s ease;
+    }
+
+    .sender-send-btn:hover,
+    .sender-secondary-btn:hover{
+      background:rgba(201,168,76,0.06);
+    }
+
+    .sender-secondary-btn{
+      display:none;
+    }
+
+    .sender-secondary-btn.show{
+      display:inline-block;
+    }
+
     @media (max-width: 768px){
       body{ cursor:auto; }
       #cursor, #cursor-ring{ display:none; }
@@ -430,12 +523,25 @@
         padding:2.1rem 1.5rem;
       }
 
-      .hero-sub{
-        font-size:1rem;
-      }
-
       .gold-line{
         max-width:80vw;
+      }
+
+      .sender-actions{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .sender-status{
+        text-align:center;
+      }
+
+      .sender-buttons{
+        justify-content:center;
+      }
+
+      .sender-btn{
+        width:min(100%, 340px);
       }
     }
   </style>
@@ -446,20 +552,13 @@
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
 
-  <!-- HERO -->
   <section id="hero">
     <div class="hero-birthday">Happy Birthday</div>
     <div class="hero-name">Vaishnavi</div>
     <div class="gold-line" style="animation-delay:1.6s;"></div>
-    <div class="hero-year">Happy 20th Birthday </div>
-
-    <div class="scroll-cue">
-      <div class="scroll-line"></div>
-      <span>scroll</span>
-    </div>
+    <div class="hero-year">Happy 20th Birthday</div>
   </section>
 
-  <!-- POEM -->
   <section id="poem">
     <div class="section-label">✦ a verse for you ✦</div>
     <div class="poem-line">There are moments that don't announce themselves —</div>
@@ -472,7 +571,6 @@
     <div class="poem-line" style="margin-top:1.5rem;font-size:1.6rem;font-family:'Cormorant Garamond',serif;color:var(--gold2);font-style:italic;">Happy Birthday, Vaishnavi.</div>
   </section>
 
-  <!-- MESSAGE -->
   <section id="message">
     <div class="msg-box">
       <div class="msg-quote">"</div>
@@ -481,7 +579,6 @@
     </div>
   </section>
 
-  <!-- CLOSING -->
   <section id="closing">
     <div class="gold-line" style="animation:none;width:200px;"></div>
     <br>
@@ -489,14 +586,60 @@
     <div class="closing-date">✦ &nbsp; with quiet admiration &nbsp; ✦</div>
   </section>
 
+  <section id="sender-note">
+    <div class="gold-line" style="animation:none;width:220px;"></div>
+
+    <div class="sender-note-wrap">
+      <div class="section-label visible" style="opacity:1;">✦ a private passage ✦</div>
+
+      <button id="reveal-note-feature" class="sender-btn">
+        Convey a Message to the Sender
+      </button>
+
+      <div id="sender-note-panel" class="sender-panel">
+        <div id="sender-pass-wrap" class="sender-pass-wrap">
+          <input
+            id="sender-pass"
+            type="password"
+            placeholder="Enter the word"
+            class="sender-pass-input"
+          />
+          <button id="unlock-sender-note" class="sender-unlock-btn">Unlock</button>
+          <div class="sender-hint">Hint: the sky remembers this sign.</div>
+        </div>
+
+        <div id="sender-compose-wrap" class="sender-compose-wrap">
+          <textarea
+            id="sender-message"
+            placeholder="Write your message here..."
+            class="sender-textarea"
+          ></textarea>
+
+          <div class="sender-actions">
+            <span id="sender-status" class="sender-status">
+              Your message will remain unnamed.
+            </span>
+
+            <div class="sender-buttons">
+              <button id="send-sender-message" class="sender-send-btn">
+                Send
+              </button>
+              <button id="send-another-message" class="sender-secondary-btn">
+                Leave Another Message
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <script>
-    /* Canvas */
     const canvas = document.getElementById('starfield');
     const ctx = canvas.getContext('2d');
 
     let stars = [];
     let shooters = [];
-    let sparkles = [];
 
     function resizeCanvas(){
       canvas.width = window.innerWidth;
@@ -517,30 +660,23 @@
       }
     }
 
-    /* Aries constellation pattern */
     function getAriesConstellation(){
       const W = canvas.width;
       const H = canvas.height;
 
       const ariesStars = [
-        { x: 0.36, y: 0.30, r: 3.0, name: 'Hamal' },
-        { x: 0.46, y: 0.36, r: 2.3, name: 'Sheratan' },
-        { x: 0.53, y: 0.41, r: 1.9, name: 'Mesarthim' },
-        { x: 0.60, y: 0.48, r: 1.2, name: '41 Ari' },
-        { x: 0.67, y: 0.54, r: 1.1, name: 'Botein' }
+        { x: 0.36, y: 0.30, r: 3.0 },
+        { x: 0.46, y: 0.36, r: 2.3 },
+        { x: 0.53, y: 0.41, r: 1.9 },
+        { x: 0.60, y: 0.48, r: 1.2 },
+        { x: 0.67, y: 0.54, r: 1.1 }
       ];
 
-      const ariesLines = [
-        [0,1],
-        [1,2],
-        [2,3],
-        [3,4]
-      ];
+      const ariesLines = [[0,1],[1,2],[2,3],[3,4]];
 
       return {
         stars: ariesStars.map(s => ({ ...s, x: s.x * W, y: s.y * H })),
-        lines: ariesLines,
-        label: 'Aries'
+        lines: ariesLines
       };
     }
 
@@ -586,10 +722,12 @@
           ctx.strokeStyle = `rgba(245,230,163,${alpha * 0.7})`;
           ctx.lineWidth = 0.9;
           const sp = s.r * 5;
+
           ctx.beginPath();
           ctx.moveTo(s.x - sp, s.y);
           ctx.lineTo(s.x + sp, s.y);
           ctx.stroke();
+
           ctx.beginPath();
           ctx.moveTo(s.x, s.y - sp);
           ctx.lineTo(s.x, s.y + sp);
@@ -682,11 +820,11 @@
     requestAnimationFrame(animateStars);
     window.addEventListener('resize', resizeCanvas);
 
-    /* Dust */
     setInterval(() => {
       const d = document.createElement('div');
       d.className = 'dust';
       const sz = (Math.random() * 2 + 1).toFixed(1) + 'px';
+
       d.style.cssText = `
         left:${Math.random() * 100}%;
         bottom:-10px;
@@ -695,11 +833,11 @@
         animation-duration:${6 + Math.random() * 8}s;
         --drift:${(Math.random() - 0.5) * 80}px
       `;
+
       document.body.appendChild(d);
       setTimeout(() => d.remove(), 15000);
     }, 500);
 
-    /* Cursor */
     const cur = document.getElementById('cursor');
     const ring = document.getElementById('cursor-ring');
     let mx = 0, my = 0, rx = 0, ry = 0;
@@ -719,7 +857,6 @@
       requestAnimationFrame(animateRing);
     })();
 
-    /* Ripple */
     document.addEventListener('click', e => {
       const r = document.createElement('div');
       r.className = 'ripple';
@@ -729,7 +866,6 @@
       setTimeout(() => r.remove(), 800);
     });
 
-    /* Scroll reveal */
     const observer = new IntersectionObserver(entries => {
       entries.forEach(en => {
         if(en.isIntersecting) en.target.classList.add('visible');
@@ -739,7 +875,6 @@
     document.querySelectorAll('.poem-line,.section-label,.msg-box,.closing-wish,.closing-date')
       .forEach(el => observer.observe(el));
 
-    /* Typewriter */
     const fullMsg = "You probably don't know this — but someone out there met you years ago, on a perfectly ordinary day, and never quite forgot you. Not your words, not your presence. Just you. They've hoped, quietly and persistently, that life has been good to you. That you've been celebrated the way you deserve. Today especially.";
     const msgEl = document.getElementById('typed-msg');
     let ti = 0;
@@ -758,19 +893,13 @@
 
     msgObs.observe(document.getElementById('message'));
 
-    /* Confetti burst on load */
     function createConfettiBurst(count = 120){
-      const colors = [
-        '#c9a84c',
-        '#e8c96a',
-        '#f5e6a3',
-        '#f0e6c8',
-        '#d8b85b'
-      ];
+      const colors = ['#c9a84c','#e8c96a','#f5e6a3','#f0e6c8','#d8b85b'];
 
       for(let i = 0; i < count; i++){
         const piece = document.createElement('div');
         piece.className = 'confetti';
+
         const left = Math.random() * 100;
         const width = 6 + Math.random() * 8;
         const height = 12 + Math.random() * 16;
@@ -788,13 +917,98 @@
         piece.style.transform = `translateY(-20px) rotate(${Math.random() * 360}deg)`;
 
         document.body.appendChild(piece);
-
         setTimeout(() => piece.remove(), (duration + delay) * 1000 + 400);
       }
     }
 
     window.addEventListener('load', () => {
       setTimeout(() => createConfettiBurst(140), 250);
+    });
+
+    const revealNoteFeatureBtn = document.getElementById('reveal-note-feature');
+    const senderNotePanel = document.getElementById('sender-note-panel');
+    const unlockSenderNoteBtn = document.getElementById('unlock-sender-note');
+    const senderPassInput = document.getElementById('sender-pass');
+    const senderPassWrap = document.getElementById('sender-pass-wrap');
+    const senderComposeWrap = document.getElementById('sender-compose-wrap');
+    const senderMessageInput = document.getElementById('sender-message');
+    const senderStatus = document.getElementById('sender-status');
+    const sendSenderMessageBtn = document.getElementById('send-sender-message');
+    const sendAnotherMessageBtn = document.getElementById('send-another-message');
+
+    const SENDER_PASSCODE = 'vaishnavi';
+
+    revealNoteFeatureBtn.addEventListener('click', () => {
+      senderNotePanel.classList.add('open');
+      senderNotePanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+
+    unlockSenderNoteBtn.addEventListener('click', () => {
+      const enteredPass = senderPassInput.value.trim();
+
+      if (!enteredPass) {
+        senderStatus.textContent = 'Enter the word first.';
+        return;
+      }
+
+      if (enteredPass.toLowerCase() === SENDER_PASSCODE.toLowerCase()) {
+        senderPassWrap.style.display = 'none';
+        senderComposeWrap.classList.add('open');
+        senderStatus.textContent = 'Your message will remain unnamed.';
+        senderMessageInput.focus();
+      } else {
+        senderStatus.textContent = 'That word does not open this.';
+      }
+    });
+
+    async function sendSenderMessage() {
+      const message = senderMessageInput.value.trim();
+
+      if (!message) {
+        senderStatus.textContent = 'Write a message first.';
+        return;
+      }
+
+      sendSenderMessageBtn.disabled = true;
+      sendSenderMessageBtn.style.opacity = '0.6';
+      senderStatus.textContent = 'Sending quietly...';
+
+      try {
+        const response = await fetch('/api/private-message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message,
+            passcode: senderPassInput.value
+          })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Failed to send.');
+        }
+
+        senderMessageInput.value = '';
+        senderStatus.textContent = 'Your message was sent quietly.';
+        sendAnotherMessageBtn.classList.add('show');
+      } catch (error) {
+        console.error(error);
+        senderStatus.textContent = 'Something went wrong. Please try again.';
+      } finally {
+        sendSenderMessageBtn.disabled = false;
+        sendSenderMessageBtn.style.opacity = '1';
+      }
+    }
+
+    sendSenderMessageBtn.addEventListener('click', sendSenderMessage);
+
+    sendAnotherMessageBtn.addEventListener('click', () => {
+      senderMessageInput.value = '';
+      senderMessageInput.focus();
+      senderStatus.textContent = 'You can leave another message.';
     });
   </script>
 </body>
