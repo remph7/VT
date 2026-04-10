@@ -27,12 +27,9 @@ app.get('/', (req, res) => {
 
 app.post('/api/private-message', async (req, res) => {
   try {
-    const { message, passcode } = req.body;
+    const { message } = req.body;
 
-    if (passcode !== process.env.SECRET_PASSCODE) {
-      return res.status(403).json({ error: 'Unauthorized.' });
-    }
-
+    // validation
     if (!message || !message.trim()) {
       return res.status(400).json({ error: 'Message is required.' });
     }

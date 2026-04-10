@@ -8,146 +8,387 @@
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     :root { --gold:#c9a84c; --gold2:#e8c96a; --gold3:#f5e6a3; }
+
     html { scroll-behavior:smooth; }
-    body { background:#080808; color:#f0e6c8; font-family:'Montserrat',sans-serif; font-weight:300; overflow-x:hidden; cursor:none; }
-    #starfield { position:fixed; inset:0; z-index:0; pointer-events:none; }
-    #cursor { position:fixed; width:10px; height:10px; border-radius:50%; background:var(--gold); pointer-events:none; z-index:9999; transform:translate(-50%,-50%); mix-blend-mode:screen; }
-    #cursor-ring { position:fixed; width:34px; height:34px; border-radius:50%; border:1px solid rgba(201,168,76,0.45); pointer-events:none; z-index:9998; transform:translate(-50%,-50%); }
-    .dust { position:fixed; border-radius:50%; background:var(--gold2); pointer-events:none; z-index:1; animation:dustRise linear infinite; opacity:0; }
+
+    body {
+      background:#080808;
+      color:#f0e6c8;
+      font-family:'Montserrat',sans-serif;
+      font-weight:300;
+      overflow-x:hidden;
+      cursor:none;
+    }
+
+    #starfield {
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+    }
+
+    #cursor {
+      position:fixed;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--gold);
+      pointer-events:none;
+      z-index:9999;
+      transform:translate(-50%,-50%);
+      mix-blend-mode:screen;
+    }
+
+    #cursor-ring {
+      position:fixed;
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      border:1px solid rgba(201,168,76,0.45);
+      pointer-events:none;
+      z-index:9998;
+      transform:translate(-50%,-50%);
+    }
+
+    .dust {
+      position:fixed;
+      border-radius:50%;
+      background:var(--gold2);
+      pointer-events:none;
+      z-index:1;
+      animation:dustRise linear infinite;
+      opacity:0;
+    }
+
     @keyframes dustRise {
       0%   { transform:translateY(0) translateX(0) scale(1); opacity:0; }
       15%  { opacity:0.75; }
       85%  { opacity:0.35; }
       100% { transform:translateY(-100vh) translateX(var(--drift)) scale(0.25); opacity:0; }
     }
-    section { position:relative; z-index:2; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:5rem 2rem; text-align:center; }
-    .gold-line { width:0; height:1px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:2rem auto; animation:expandLine 1.5s ease forwards; }
-    @keyframes expandLine { to { width:320px; } }
+
+    section {
+      position:relative;
+      z-index:2;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      padding:5rem 2rem;
+      text-align:center;
+    }
+
+    .gold-line {
+      width:0;
+      height:1px;
+      background:linear-gradient(90deg,transparent,var(--gold),transparent);
+      margin:2rem auto;
+      animation:expandLine 1.5s ease forwards;
+    }
+
+    @keyframes expandLine {
+      to { width:320px; }
+    }
 
     /* HERO */
-    #hero { overflow:hidden; position:relative; }
-    .hero-birthday {
-      font-family:'Cormorant Garamond',serif; font-weight:700;
-      font-size:clamp(4.3rem,13vw,9rem); line-height:0.9; letter-spacing:1px;
-      background:linear-gradient(135deg,#f5e6a3 0%,#c9a84c 35%,#f5e6a3 65%,#e8c96a 100%);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-      opacity:0; transform:translateX(-180px);
-      animation:slideInLeft 1.25s cubic-bezier(.22,1,.36,1) 0.4s forwards, glowPulse 3.5s ease-in-out 2s infinite;
-    }
-    .hero-name {
-      font-family:'Cormorant Garamond',serif; font-weight:400;
-      font-size:clamp(2rem,5.5vw,4rem); line-height:1; letter-spacing:12px; text-transform:uppercase;
-      color:#f0e6c8; margin-top:0.8rem; opacity:0; transform:translateX(180px);
-      animation:slideInRight 1.25s cubic-bezier(.22,1,.36,1) 0.85s forwards, floatText 4.5s ease-in-out 2.2s infinite;
-    }
-    .hero-year { font-size:0.68rem; letter-spacing:6px; color:var(--gold); opacity:0; margin-top:2rem; text-transform:uppercase; animation:fadeUp 1s ease 1.7s forwards; }
-    .scroll-cue { position:absolute; bottom:2.5rem; display:flex; flex-direction:column; align-items:center; gap:6px; opacity:0; animation:fadeUp 1s ease 2.1s forwards; }
-    .scroll-cue span { font-size:0.55rem; letter-spacing:4px; color:rgba(201,168,76,0.42); text-transform:uppercase; }
-    .scroll-line { width:1px; height:40px; background:linear-gradient(to bottom,var(--gold),transparent); animation:scrollPulse 2s ease-in-out infinite; }
-    @keyframes scrollPulse { 0%,100% { transform:scaleY(1); opacity:0.5; } 50% { transform:scaleY(1.3); opacity:1; } }
-
-    /* MOON SECTION */
-    #moon-section { min-height:auto; padding:5rem 2rem; gap:0; }
-    .moon-wrap {
-      display:flex; flex-direction:column; align-items:center; gap:2rem;
-      opacity:0; transform:translateY(30px);
-      transition:opacity 1s ease, transform 1s ease;
-    }
-    .moon-wrap.visible { opacity:1; transform:translateY(0); }
-    .moon-img-frame {
-      width:220px; height:220px; border-radius:50%; overflow:hidden;
-      border:1px solid rgba(201,168,76,0.3);
-      box-shadow:0 0 60px rgba(201,168,76,0.12), 0 0 0 8px rgba(201,168,76,0.04);
+    #hero {
+      overflow:hidden;
       position:relative;
     }
-    .moon-img-frame img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
-    .moon-phase-label {
-      font-size:0.58rem; letter-spacing:5px; text-transform:uppercase;
-      color:rgba(201,168,76,0.55);
-    }
-    .moon-phase-title {
-      font-family:'Cormorant Garamond',serif; font-size:1.6rem; font-weight:300;
-      color:var(--gold2); margin-top:0.2rem;
-    }
-    .moon-phase-desc {
-      font-size:0.82rem; line-height:1.9; color:rgba(240,230,200,0.5);
-      max-width:420px; letter-spacing:0.3px; margin-top:0.3rem;
+
+    .hero-birthday {
+      font-family:'Cormorant Garamond',serif;
+      font-weight:700;
+      font-size:clamp(4.3rem,13vw,9rem);
+      line-height:0.9;
+      letter-spacing:1px;
+      background:linear-gradient(135deg,#f5e6a3 0%,#c9a84c 35%,#f5e6a3 65%,#e8c96a 100%);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      opacity:0;
+      transform:translateX(-180px);
+      animation:slideInLeft 1.25s cubic-bezier(.22,1,.36,1) 0.4s forwards, glowPulse 3.5s ease-in-out 2s infinite;
     }
 
-    /* POEM */
-    #poem { max-width:720px; }
-    .section-label { font-size:0.55rem; letter-spacing:6px; text-transform:uppercase; color:var(--gold); opacity:0; margin-bottom:3rem; }
-    .section-label.visible { animation:fadeUp 0.8s ease forwards; }
-    .poem-line {
-      font-family:'Cormorant Garamond',serif; font-size:clamp(1.1rem,2.5vw,1.45rem); font-weight:300;
-      line-height:2.2; color:rgba(240,230,200,0.86);
-      opacity:0; transform:translateY(20px); transition:opacity 0.8s ease, transform 0.8s ease;
+    .hero-name {
+      font-family:'Cormorant Garamond',serif;
+      font-weight:400;
+      font-size:clamp(2rem,5.5vw,4rem);
+      line-height:1;
+      letter-spacing:12px;
+      text-transform:uppercase;
+      color:#f0e6c8;
+      margin-top:0.8rem;
+      opacity:0;
+      transform:translateX(180px);
+      animation:slideInRight 1.25s cubic-bezier(.22,1,.36,1) 0.85s forwards, floatText 4.5s ease-in-out 2.2s infinite;
     }
-    .poem-line.visible { opacity:1; transform:translateY(0); }
-    .poem-line em { font-style:italic; color:var(--gold2); }
-    .poem-line strong { font-weight:600; color:var(--gold3); }
 
     /* MESSAGE */
-    #message { max-width:640px; }
-    .msg-box {
-      border:1px solid rgba(201,168,76,0.22); border-radius:2px; padding:3rem 3.5rem;
-      position:relative; background:rgba(201,168,76,0.03); opacity:0; backdrop-filter:blur(2px);
+    #message {
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
     }
-    .msg-box.visible { animation:fadeUp 1s ease forwards; }
-    .msg-box::before,.msg-box::after { content:''; position:absolute; width:18px; height:18px; border-color:var(--gold); border-style:solid; }
-    .msg-box::before { top:-1px; left:-1px; border-width:2px 0 0 2px; }
-    .msg-box::after  { bottom:-1px; right:-1px; border-width:0 2px 2px 0; }
-    .msg-quote { font-family:'Cormorant Garamond',serif; font-size:4rem; color:var(--gold); line-height:0.5; opacity:0.4; margin-bottom:1rem; }
-    .msg-text { font-size:0.95rem; line-height:2; color:rgba(240,230,200,0.78); min-height:4rem; }
-    .msg-sig { margin-top:2rem; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:var(--gold); opacity:0.75; }
+
+    .msg-box {
+      width:min(600px, 92vw);
+      margin:0 auto;
+      padding:3rem 3.5rem;
+      position:relative;
+      border:1px solid rgba(201,168,76,0.22);
+      border-radius:2px;
+      background:rgba(201,168,76,0.03);
+      backdrop-filter:blur(2px);
+      opacity:0;
+      text-align:center;
+    }
+
+    .msg-box.visible {
+      animation:fadeUp 1s ease forwards;
+    }
+
+    .msg-box::before,
+    .msg-box::after {
+      content:'';
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-color:var(--gold);
+      border-style:solid;
+    }
+
+    .msg-box::before {
+      top:-1px;
+      left:-1px;
+      border-width:2px 0 0 2px;
+    }
+
+    .msg-box::after {
+      bottom:-1px;
+      right:-1px;
+      border-width:0 2px 2px 0;
+    }
+
+    .msg-quote {
+      font-family:'Cormorant Garamond',serif;
+      font-size:4rem;
+      color:var(--gold);
+      line-height:0.5;
+      opacity:0.4;
+      margin-bottom:1rem;
+    }
+
+    .msg-text {
+      font-size:0.95rem;
+      line-height:2;
+      color:rgba(240,230,200,0.78);
+      min-height:4rem;
+      text-align:center;
+    }
+
+    .msg-sig {
+      margin-top:2rem;
+      font-family:'Cormorant Garamond',serif;
+      font-style:italic;
+      font-size:1rem;
+      color:var(--gold);
+      opacity:0.75;
+    }
 
     /* CLOSING */
-    #closing { }
     .closing-wish {
-      font-family:'Cormorant Garamond',serif; font-size:clamp(2rem,6vw,3.8rem); font-weight:300;
+      font-family:'Cormorant Garamond',serif;
+      font-size:clamp(2rem,6vw,3.8rem);
+      font-weight:300;
       background:linear-gradient(135deg,#c9a84c,#f5e6a3,#c9a84c);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; opacity:0;
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
+      opacity:0;
     }
-    .closing-wish.visible { animation:fadeUp 1.2s ease forwards; }
-    .closing-date { font-size:0.6rem; letter-spacing:5px; color:rgba(201,168,76,0.42); text-transform:uppercase; margin-top:1.5rem; opacity:0; }
-    .closing-date.visible { animation:fadeUp 1s ease 0.25s forwards; }
+
+    .closing-wish.visible {
+      animation:fadeUp 1.2s ease forwards;
+    }
 
     /* SENDER NOTE */
-    #sender-note { text-align:center; }
-    .sender-note-wrap { width:min(760px,92vw); margin:0 auto; }
-    .sender-btn { margin-top:0.5rem; background:transparent; color:var(--gold); border:1px solid rgba(201,168,76,0.42); padding:14px 26px; letter-spacing:3px; text-transform:uppercase; font-size:0.66rem; font-family:'Montserrat',sans-serif; cursor:pointer; transition:all 0.35s ease; }
-    .sender-btn:hover { background:rgba(201,168,76,0.06); border-color:rgba(245,230,163,0.7); transform:translateY(-1px); }
-    .sender-panel { max-height:0; overflow:hidden; opacity:0; margin-top:1.5rem; transition:max-height 0.7s ease, opacity 0.5s ease; border:1px solid rgba(201,168,76,0.16); background:rgba(201,168,76,0.03); backdrop-filter:blur(2px); }
-    .sender-panel.open { max-height:700px; opacity:1; padding:2rem 1.5rem; }
-    .sender-pass-wrap { display:flex; flex-direction:column; align-items:center; gap:0.9rem; }
-    .sender-pass-input { width:min(360px,84vw); padding:12px 14px; background:#101010; border:1px solid rgba(201,168,76,0.28); color:#f0e6c8; outline:none; font-family:'Montserrat',sans-serif; font-size:0.9rem; text-align:center; }
-    .sender-unlock-btn { background:var(--gold); color:#111; border:none; padding:12px 18px; letter-spacing:1px; cursor:pointer; font-size:0.75rem; text-transform:uppercase; }
-    .sender-hint { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1rem; color:rgba(240,230,200,0.55); margin-top:0.1rem; }
-    .sender-compose-wrap { display:none; margin-top:0.5rem; animation:fadeUp 0.7s ease forwards; }
-    .sender-compose-wrap.open { display:block; }
-    .sender-textarea { width:100%; min-height:180px; background:#0e0e0e; border:1px solid rgba(201,168,76,0.25); color:#f0e6c8; padding:18px; resize:vertical; outline:none; font-family:'Montserrat',sans-serif; font-size:0.95rem; line-height:1.8; }
-    .sender-actions { margin-top:1rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap; }
-    .sender-status { color:rgba(240,230,200,0.58); font-size:0.84rem; text-align:left; }
-    .sender-buttons { display:flex; gap:0.75rem; flex-wrap:wrap; }
-    .sender-send-btn,.sender-secondary-btn { padding:12px 20px; background:transparent; color:var(--gold); border:1px solid rgba(201,168,76,0.42); cursor:pointer; letter-spacing:2px; text-transform:uppercase; font-size:0.64rem; transition:all 0.3s ease; }
-    .sender-send-btn:hover,.sender-secondary-btn:hover { background:rgba(201,168,76,0.06); }
-    .sender-secondary-btn { display:none; }
-    .sender-secondary-btn.show { display:inline-block; }
+    #sender-note {
+      text-align:center;
+    }
+
+    .sender-note-wrap {
+      width:min(760px,92vw);
+      margin:0 auto;
+    }
+
+    .sender-btn {
+      margin-top:0.5rem;
+      background:transparent;
+      color:var(--gold);
+      border:1px solid rgba(201,168,76,0.42);
+      padding:14px 26px;
+      letter-spacing:3px;
+      text-transform:uppercase;
+      font-size:0.66rem;
+      font-family:'Montserrat',sans-serif;
+      cursor:pointer;
+      transition:all 0.35s ease;
+    }
+
+    .sender-btn:hover {
+      background:rgba(201,168,76,0.06);
+      border-color:rgba(245,230,163,0.7);
+      transform:translateY(-1px);
+    }
+
+    .sender-panel {
+      max-height:0;
+      overflow:hidden;
+      opacity:0;
+      margin-top:1.5rem;
+      transition:max-height 0.7s ease, opacity 0.5s ease;
+      border:1px solid rgba(201,168,76,0.16);
+      background:rgba(201,168,76,0.03);
+      backdrop-filter:blur(2px);
+    }
+
+    .sender-panel.open {
+      max-height:700px;
+      opacity:1;
+      padding:2rem 1.5rem;
+    }
+
+    .sender-compose-wrap {
+      display:block;
+      margin-top:0.5rem;
+      animation:fadeUp 0.7s ease forwards;
+    }
+
+    .sender-textarea {
+      width:100%;
+      min-height:180px;
+      background:#0e0e0e;
+      border:1px solid rgba(201,168,76,0.25);
+      color:#f0e6c8;
+      padding:18px;
+      resize:vertical;
+      outline:none;
+      font-family:'Montserrat',sans-serif;
+      font-size:0.95rem;
+      line-height:1.8;
+    }
+
+    .sender-actions {
+      margin-top:1rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:1rem;
+      flex-wrap:wrap;
+    }
+
+    .sender-status {
+      color:rgba(240,230,200,0.58);
+      font-size:0.84rem;
+      text-align:left;
+    }
+
+    .sender-buttons {
+      display:flex;
+      gap:0.75rem;
+      flex-wrap:wrap;
+    }
+
+    .sender-send-btn,
+    .sender-secondary-btn {
+      padding:12px 20px;
+      background:transparent;
+      color:var(--gold);
+      border:1px solid rgba(201,168,76,0.42);
+      cursor:pointer;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      font-size:0.64rem;
+      transition:all 0.3s ease;
+    }
+
+    .sender-send-btn:hover,
+    .sender-secondary-btn:hover {
+      background:rgba(201,168,76,0.06);
+    }
+
+    .sender-secondary-btn {
+      display:none;
+    }
+
+    .sender-secondary-btn.show {
+      display:inline-block;
+    }
 
     /* CONFETTI */
-    .confetti { position:fixed; top:-20px; width:10px; height:18px; opacity:0.9; z-index:3; pointer-events:none; animation:confettiFall linear forwards; }
-    @keyframes confettiFall { 0% { transform:translateY(-20px) rotate(0deg); opacity:1; } 100% { transform:translateY(110vh) rotate(760deg); opacity:0.1; } }
+    .confetti {
+      position:fixed;
+      top:-20px;
+      width:10px;
+      height:18px;
+      opacity:0.9;
+      z-index:3;
+      pointer-events:none;
+      animation:confettiFall linear forwards;
+    }
+
+    @keyframes confettiFall {
+      0% { transform:translateY(-20px) rotate(0deg); opacity:1; }
+      100% { transform:translateY(110vh) rotate(760deg); opacity:0.1; }
+    }
 
     /* RIPPLE */
-    .ripple { position:fixed; border-radius:50%; border:1px solid var(--gold); pointer-events:none; z-index:9997; animation:rippleOut 0.8s ease forwards; transform:translate(-50%,-50%); }
-    @keyframes rippleOut { from { width:0; height:0; opacity:0.8; } to { width:120px; height:120px; opacity:0; } }
+    .ripple {
+      position:fixed;
+      border-radius:50%;
+      border:1px solid var(--gold);
+      pointer-events:none;
+      z-index:9997;
+      animation:rippleOut 0.8s ease forwards;
+      transform:translate(-50%,-50%);
+    }
+
+    @keyframes rippleOut {
+      from { width:0; height:0; opacity:0.8; }
+      to { width:120px; height:120px; opacity:0; }
+    }
 
     /* SHARED ANIMATIONS */
-    @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
-    @keyframes slideInLeft { from { opacity:0; transform:translateX(-180px); } to { opacity:1; transform:translateX(0); } }
-    @keyframes slideInRight { from { opacity:0; transform:translateX(180px); } to { opacity:1; transform:translateX(0); } }
-    @keyframes floatText { 0%,100% { transform:translateX(0) translateY(0); } 25% { transform:translateX(10px) translateY(-4px); } 50% { transform:translateX(0) translateY(-8px); } 75% { transform:translateX(-10px) translateY(-4px); } }
-    @keyframes glowPulse { 0%,100% { filter:drop-shadow(0 0 0px rgba(245,230,163,0.1)); } 50% { filter:drop-shadow(0 0 18px rgba(245,230,163,0.45)); } }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(28px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    @keyframes slideInLeft {
+      from { opacity:0; transform:translateX(-180px); }
+      to { opacity:1; transform:translateX(0); }
+    }
+
+    @keyframes slideInRight {
+      from { opacity:0; transform:translateX(180px); }
+      to { opacity:1; transform:translateX(0); }
+    }
+
+    @keyframes floatText {
+      0%,100% { transform:translateX(0) translateY(0); }
+      25% { transform:translateX(10px) translateY(-4px); }
+      50% { transform:translateX(0) translateY(-8px); }
+      75% { transform:translateX(-10px) translateY(-4px); }
+    }
+
+    @keyframes glowPulse {
+      0%,100% { filter:drop-shadow(0 0 0px rgba(245,230,163,0.1)); }
+      50% { filter:drop-shadow(0 0 18px rgba(245,230,163,0.45)); }
+    }
 
     @media (max-width:768px) {
       body { cursor:auto; }
@@ -155,7 +396,6 @@
       .hero-name { letter-spacing:7px; }
       .msg-box { padding:2.1rem 1.5rem; }
       .gold-line { max-width:80vw; }
-      .moon-img-frame { width:170px; height:170px; }
     }
   </style>
 </head>
@@ -164,29 +404,12 @@
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
 
-  <!-- HERO -->
   <section id="hero">
     <div class="hero-birthday">Happy Birthday</div>
     <div class="hero-name">Vaishnavi</div>
     <div class="gold-line" style="animation-delay:1.6s;"></div>
-    
   </section>
 
-
-  <!-- POEM -->
-  <section id="poem">
-    <div class="section-label">&#10022; a verse for you &#10022;</div>
-    <div class="poem-line">There are moments that don't announce themselves &mdash;</div>
-    <div class="poem-line">they arrive quietly, <em>like the first light through a train window,</em></div>
-    <div class="poem-line">and stay with you longer than you expect.</div>
-    <div class="poem-line" style="margin-top:1rem;">You were one of those moments.</div>
-    <div class="poem-line"><strong>Unforgettable.</strong> Unhurried. Real.</div>
-    <div class="poem-line" style="margin-top:1rem;">Years pass, cities change, faces blur &mdash;</div>
-    <div class="poem-line">but some people simply <em>don't fade.</em></div>
-    <div class="poem-line" style="margin-top:1.5rem;font-size:1.6rem;font-family:'Cormorant Garamond',serif;color:var(--gold2);font-style:italic;">Happy Birthday, Vaishnavi.</div>
-  </section>
-
-  <!-- MESSAGE -->
   <section id="message">
     <div class="msg-box">
       <div class="msg-quote">&ldquo;</div>
@@ -195,28 +418,24 @@
     </div>
   </section>
 
-  <!-- CLOSING -->
   <section id="closing">
     <div class="gold-line" style="animation:none;width:200px;"></div>
     <br>
     <div class="closing-wish">May this year be<br>your finest yet.</div>
   </section>
 
-  <!-- SENDER NOTE -->
   <section id="sender-note">
     <div class="gold-line" style="animation:none;width:220px;"></div>
     <div class="sender-note-wrap">
-      <button id="reveal-note-feature" class="sender-btn">Send a Message</button>
+      <button id="reveal-note-feature" class="sender-btn">Leave a Message</button>
+
       <div id="sender-note-panel" class="sender-panel">
-        <div id="sender-pass-wrap" class="sender-pass-wrap">
-          <input id="sender-pass" type="password" placeholder="Enter the word" class="sender-pass-input" />
-          <button id="unlock-sender-note" class="sender-unlock-btn">Unlock</button>
-          <div class="sender-hint">Hint: the sky remembers this sign.</div>
-        </div>
         <div id="sender-compose-wrap" class="sender-compose-wrap">
           <textarea id="sender-message" placeholder="Write your message here..." class="sender-textarea"></textarea>
+
           <div class="sender-actions">
             <span id="sender-status" class="sender-status">Your message will remain unnamed.</span>
+
             <div class="sender-buttons">
               <button id="send-sender-message" class="sender-send-btn">Send</button>
               <button id="send-another-message" class="sender-secondary-btn">Leave Another Message</button>
@@ -228,129 +447,176 @@
   </section>
 
   <script>
-    /* ── Canvas ── */
     const canvas = document.getElementById('starfield');
     const ctx = canvas.getContext('2d');
-    let stars=[], shooters=[];
+    let stars = [], shooters = [];
 
-    function resizeCanvas(){
-      canvas.width=window.innerWidth; canvas.height=window.innerHeight; initStars();
-    }
-    function initStars(){
-      stars=[];
-      for(let i=0;i<180;i++) stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.3+0.25,speed:Math.random()*0.006+0.002,phase:Math.random()*Math.PI*2});
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initStars();
     }
 
-    /* ── LEO constellation (April 10 2006, Maharashtra) — accurate star positions ──
-       Stars mapped as fraction of screen (x,y), with real relative positions:
-       Sickle (head): Regulus, Eta, Algieba, Adhafera, Ras Elased Bor., Ras Elased Aus.
-       Body triangle: Regulus, Zosma, Denebola
-    */
-    function getLeo(){
-      const W=canvas.width, H=canvas.height;
-      // Normalized positions tuned to look like actual Leo on screen
-      // Sickle reads bottom-to-top like a backwards question mark
-      const leoStars=[
-        {x:0.38,y:0.62,r:3.4,name:'Regulus'},       // 0 — brightest, base of sickle / heart
-        {x:0.36,y:0.50,r:2.0,name:'Eta Leonis'},    // 1 — up from Regulus
-        {x:0.39,y:0.40,r:2.6,name:'Algieba'},       // 2 — brightest in curve, lion mane
-        {x:0.44,y:0.33,r:1.7,name:'Adhafera'},      // 3
-        {x:0.50,y:0.29,r:1.5,name:'Ras El. Bor.'},  // 4
-        {x:0.56,y:0.34,r:1.5,name:'Ras El. Aus.'},  // 5 — tip of sickle curl
-        // Body / haunches triangle
-        {x:0.60,y:0.55,r:2.2,name:'Zosma'},         // 6 — lion back
-        {x:0.72,y:0.60,r:2.5,name:'Denebola'},      // 7 — lion tail, 2nd brightest
-        {x:0.65,y:0.62,r:1.6,name:'Chertan'},       // 8 — between Zosma & Denebola
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < 180; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.3 + 0.25,
+          speed: Math.random() * 0.006 + 0.002,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+    }
+
+    function getLeo() {
+      const W = canvas.width, H = canvas.height;
+
+      const leoStars = [
+        {x:0.38,y:0.62,r:3.4,name:'Regulus'},
+        {x:0.36,y:0.50,r:2.0,name:'Eta Leonis'},
+        {x:0.39,y:0.40,r:2.6,name:'Algieba'},
+        {x:0.44,y:0.33,r:1.7,name:'Adhafera'},
+        {x:0.50,y:0.29,r:1.5,name:'Ras El. Bor.'},
+        {x:0.56,y:0.34,r:1.5,name:'Ras El. Aus.'},
+        {x:0.60,y:0.55,r:2.2,name:'Zosma'},
+        {x:0.72,y:0.60,r:2.5,name:'Denebola'},
+        {x:0.65,y:0.62,r:1.6,name:'Chertan'},
       ];
-      const lines=[
-        // Sickle (head) — backwards question mark
+
+      const lines = [
         [0,1],[1,2],[2,3],[3,4],[4,5],[5,2],
-        // Body connection
         [0,6],[6,8],[8,7],[6,7]
       ];
+
       return {
-        stars: leoStars.map(s=>(({...s,x:s.x*W,y:s.y*H}),{...s,x:s.x*W,y:s.y*H})),
+        stars: leoStars.map(s => ({ ...s, x: s.x * W, y: s.y * H })),
         lines
       };
     }
 
-    function drawLeo(t){
-      const leo=getLeo();
-      const pulse=0.72+0.28*Math.sin(t*0.0015);
+    function drawLeo(t) {
+      const leo = getLeo();
+      const pulse = 0.72 + 0.28 * Math.sin(t * 0.0015);
 
-      // Constellation lines
       ctx.save();
-      ctx.strokeStyle=`rgba(232,201,106,${0.45*pulse})`;
-      ctx.lineWidth=1.3; ctx.setLineDash([5,9]);
-      leo.lines.forEach(([a,b])=>{
-        ctx.beginPath(); ctx.moveTo(leo.stars[a].x,leo.stars[a].y); ctx.lineTo(leo.stars[b].x,leo.stars[b].y); ctx.stroke();
-      });
-      ctx.setLineDash([]); ctx.restore();
+      ctx.strokeStyle = `rgba(232,201,106,${0.45 * pulse})`;
+      ctx.lineWidth = 1.3;
+      ctx.setLineDash([5,9]);
 
-      // Stars
-      leo.stars.forEach((s,i)=>{
-        const flicker=0.60+0.40*Math.sin(t*0.002+i*1.4);
-        const alpha=flicker*pulse;
-        // Glow halo
-        const glow=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*10);
-        glow.addColorStop(0,`rgba(245,230,163,${alpha*0.5})`);
-        glow.addColorStop(1,'rgba(0,0,0,0)');
-        ctx.beginPath(); ctx.arc(s.x,s.y,s.r*10,0,Math.PI*2); ctx.fillStyle=glow; ctx.fill();
-        // Core
-        ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fillStyle=`rgba(245,230,163,${alpha})`; ctx.fill();
-        // Cross sparkle on bright stars
-        if(s.r>=2.2){
-          ctx.save(); ctx.strokeStyle=`rgba(245,230,163,${alpha*0.65})`; ctx.lineWidth=0.9;
-          const sp=s.r*5.5;
-          ctx.beginPath(); ctx.moveTo(s.x-sp,s.y); ctx.lineTo(s.x+sp,s.y); ctx.stroke();
-          ctx.beginPath(); ctx.moveTo(s.x,s.y-sp); ctx.lineTo(s.x,s.y+sp); ctx.stroke();
-          ctx.restore();
-        }
-        // Star name labels for main ones only
-        if(['Regulus','Algieba','Denebola'].includes(s.name)){
-          ctx.save();
-          ctx.font=`300 9px Montserrat,sans-serif`;
-          ctx.fillStyle=`rgba(201,168,76,${0.5*pulse})`;
-          ctx.fillText(s.name, s.x+s.r*2+4, s.y+3);
-          ctx.restore();
-        }
+      leo.lines.forEach(([a,b]) => {
+        ctx.beginPath();
+        ctx.moveTo(leo.stars[a].x, leo.stars[a].y);
+        ctx.lineTo(leo.stars[b].x, leo.stars[b].y);
+        ctx.stroke();
       });
 
-      // Constellation label — subtle, positioned near center of Leo
-      ctx.save();
-      ctx.font='400 10px Montserrat,sans-serif';
-      ctx.fillStyle=`rgba(201,168,76,${0.28*pulse})`;
-      ctx.letterSpacing='4px';
+      ctx.setLineDash([]);
       ctx.restore();
-    }
 
-    /* ── Shooting stars ── */
-    function spawnShooter(){
-      const angle=(20+Math.random()*18)*Math.PI/180;
-      shooters.push({x:Math.random()*canvas.width*1.3-canvas.width*0.15,y:Math.random()*canvas.height*0.38,len:90+Math.random()*130,speed:9+Math.random()*8,angle,life:1});
-    }
-    setInterval(spawnShooter,2200);
+      leo.stars.forEach((s, i) => {
+        const flicker = 0.60 + 0.40 * Math.sin(t * 0.002 + i * 1.4);
+        const alpha = flicker * pulse;
 
-    function drawShooters(){
-      shooters=shooters.filter(s=>s.life>0);
-      shooters.forEach(s=>{
-        s.x+=Math.cos(s.angle)*s.speed; s.y+=Math.sin(s.angle)*s.speed; s.life-=0.024;
-        const grd=ctx.createLinearGradient(s.x-Math.cos(s.angle)*s.len,s.y-Math.sin(s.angle)*s.len,s.x,s.y);
-        grd.addColorStop(0,'rgba(201,168,76,0)'); grd.addColorStop(1,`rgba(245,230,163,${s.life})`);
-        ctx.beginPath(); ctx.moveTo(s.x-Math.cos(s.angle)*s.len,s.y-Math.sin(s.angle)*s.len); ctx.lineTo(s.x,s.y);
-        ctx.strokeStyle=grd; ctx.lineWidth=1.5; ctx.stroke();
-        ctx.beginPath(); ctx.arc(s.x,s.y,1.5,0,Math.PI*2); ctx.fillStyle=`rgba(245,230,163,${s.life})`; ctx.fill();
+        const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.r * 10);
+        glow.addColorStop(0, `rgba(245,230,163,${alpha * 0.5})`);
+        glow.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r * 10, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(245,230,163,${alpha})`;
+        ctx.fill();
+
+        if (s.r >= 2.2) {
+          ctx.save();
+          ctx.strokeStyle = `rgba(245,230,163,${alpha * 0.65})`;
+          ctx.lineWidth = 0.9;
+          const sp = s.r * 5.5;
+
+          ctx.beginPath();
+          ctx.moveTo(s.x - sp, s.y);
+          ctx.lineTo(s.x + sp, s.y);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y - sp);
+          ctx.lineTo(s.x, s.y + sp);
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        if (['Regulus','Algieba','Denebola'].includes(s.name)) {
+          ctx.save();
+          ctx.font = `300 9px Montserrat,sans-serif`;
+          ctx.fillStyle = `rgba(201,168,76,${0.5 * pulse})`;
+          ctx.fillText(s.name, s.x + s.r * 2 + 4, s.y + 3);
+          ctx.restore();
+        }
       });
     }
 
-    function animateStars(t){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
-      stars.forEach(s=>{
-        const alpha=0.18+0.42*Math.abs(Math.sin(t*s.speed+s.phase));
-        ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fillStyle=`rgba(201,168,76,${alpha})`; ctx.fill();
+    function spawnShooter() {
+      const angle = (20 + Math.random() * 18) * Math.PI / 180;
+      shooters.push({
+        x: Math.random() * canvas.width * 1.3 - canvas.width * 0.15,
+        y: Math.random() * canvas.height * 0.38,
+        len: 90 + Math.random() * 130,
+        speed: 9 + Math.random() * 8,
+        angle,
+        life: 1
       });
+    }
+
+    setInterval(spawnShooter, 2200);
+
+    function drawShooters() {
+      shooters = shooters.filter(s => s.life > 0);
+
+      shooters.forEach(s => {
+        s.x += Math.cos(s.angle) * s.speed;
+        s.y += Math.sin(s.angle) * s.speed;
+        s.life -= 0.024;
+
+        const grd = ctx.createLinearGradient(
+          s.x - Math.cos(s.angle) * s.len,
+          s.y - Math.sin(s.angle) * s.len,
+          s.x,
+          s.y
+        );
+
+        grd.addColorStop(0, 'rgba(201,168,76,0)');
+        grd.addColorStop(1, `rgba(245,230,163,${s.life})`);
+
+        ctx.beginPath();
+        ctx.moveTo(s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len);
+        ctx.lineTo(s.x, s.y);
+        ctx.strokeStyle = grd;
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(245,230,163,${s.life})`;
+        ctx.fill();
+      });
+    }
+
+    function animateStars(t) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach(s => {
+        const alpha = 0.18 + 0.42 * Math.abs(Math.sin(t * s.speed + s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(201,168,76,${alpha})`;
+        ctx.fill();
+      });
+
       drawShooters();
       drawLeo(t);
       requestAnimationFrame(animateStars);
@@ -358,103 +624,153 @@
 
     resizeCanvas();
     requestAnimationFrame(animateStars);
-    window.addEventListener('resize',resizeCanvas);
+    window.addEventListener('resize', resizeCanvas);
 
-    /* ── Dust ── */
-    setInterval(()=>{
-      const d=document.createElement('div'); d.className='dust';
-      const sz=(Math.random()*2+1).toFixed(1)+'px';
-      d.style.cssText=`left:${Math.random()*100}%;bottom:-10px;width:${sz};height:${sz};animation-duration:${6+Math.random()*8}s;--drift:${(Math.random()-0.5)*80}px`;
-      document.body.appendChild(d); setTimeout(()=>d.remove(),15000);
-    },500);
+    setInterval(() => {
+      const d = document.createElement('div');
+      d.className = 'dust';
+      const sz = (Math.random() * 2 + 1).toFixed(1) + 'px';
+      d.style.cssText = `left:${Math.random() * 100}%;bottom:-10px;width:${sz};height:${sz};animation-duration:${6 + Math.random() * 8}s;--drift:${(Math.random() - 0.5) * 80}px`;
+      document.body.appendChild(d);
+      setTimeout(() => d.remove(), 15000);
+    }, 500);
 
-    /* ── Cursor ── */
-    const cur=document.getElementById('cursor'), ring=document.getElementById('cursor-ring');
-    let mx=0,my=0,rx=0,ry=0;
-    document.addEventListener('mousemove',e=>{ mx=e.clientX; my=e.clientY; cur.style.left=mx+'px'; cur.style.top=my+'px'; });
-    (function animRing(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.left=rx+'px'; ring.style.top=ry+'px'; requestAnimationFrame(animRing); })();
+    const cur = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let mx = 0, my = 0, rx = 0, ry = 0;
 
-    /* ── Ripple ── */
-    document.addEventListener('click',e=>{
-      const r=document.createElement('div'); r.className='ripple'; r.style.left=e.clientX+'px'; r.style.top=e.clientY+'px';
-      document.body.appendChild(r); setTimeout(()=>r.remove(),800);
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX;
+      my = e.clientY;
+      cur.style.left = mx + 'px';
+      cur.style.top = my + 'px';
     });
 
-    /* ── Scroll reveal ── */
-    const observer=new IntersectionObserver(entries=>{ entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('visible'); }); },{threshold:0.12});
-    document.querySelectorAll('.poem-line,.section-label,.msg-box,.closing-wish,.closing-date,.moon-wrap').forEach(el=>observer.observe(el));
+    (function animRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animRing);
+    })();
 
-    /* ── Typewriter ── */
-    const fullMsg="You probably don't know this — but someone out there met you years ago, on a perfectly ordinary day, and never quite forgot you. Not your words, not your presence. Just you. They’ve hoped, quietly and persistently, that life has been good to you. That you’ve been celebrated the way you deserve. Today especially.";
-    const msgEl=document.getElementById('typed-msg');
-    let ti=0;
-    const msgObs=new IntersectionObserver(entries=>{
-      if(entries[0].isIntersecting&&ti===0){
+    document.addEventListener('click', e => {
+      const r = document.createElement('div');
+      r.className = 'ripple';
+      r.style.left = e.clientX + 'px';
+      r.style.top = e.clientY + 'px';
+      document.body.appendChild(r);
+      setTimeout(() => r.remove(), 800);
+    });
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting) en.target.classList.add('visible');
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.msg-box,.closing-wish').forEach(el => observer.observe(el));
+
+    const fullMsg = "Hey, a bit late but happy birthday Vaishnavi. It’s just someone who happened to cross paths with you a few years ago. Nothing serious just felt like saying, you stayed in my mind more than you’d expect. If you ever think back to random conversations or moments, this might be one of them. Anyway, hope you’re doing well. Take care :)";
+    const msgEl = document.getElementById('typed-msg');
+    let ti = 0;
+
+    const msgObs = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && ti === 0) {
         document.querySelector('.msg-box').classList.add('visible');
-        setTimeout(function type(){ if(ti<fullMsg.length){ msgEl.textContent+=fullMsg[ti++]; setTimeout(type,22); } },600);
+        setTimeout(function type() {
+          if (ti < fullMsg.length) {
+            msgEl.textContent += fullMsg[ti++];
+            setTimeout(type, 22);
+          }
+        }, 600);
       }
-    },{threshold:0.3});
+    }, { threshold: 0.3 });
+
     msgObs.observe(document.getElementById('message'));
 
-    /* ── Confetti burst ── */
-    function createConfettiBurst(count=120){
-      const colors=['#c9a84c','#e8c96a','#f5e6a3','#f0e6c8','#d8b85b'];
-      for(let i=0;i<count;i++){
-        const p=document.createElement('div'); p.className='confetti';
-        const dur=3.2+Math.random()*2.4, delay=Math.random()*0.9;
-        const color=colors[Math.floor(Math.random()*colors.length)];
-        p.style.left=Math.random()*100+'vw'; p.style.width=(6+Math.random()*8)+'px'; p.style.height=(12+Math.random()*16)+'px';
-        p.style.background=color; p.style.borderRadius=Math.random()>0.5?'2px':'50%';
-        p.style.animationDuration=dur+'s'; p.style.animationDelay=delay+'s';
-        p.style.transform=`translateY(-20px) rotate(${Math.random()*360}deg)`;
-        document.body.appendChild(p); setTimeout(()=>p.remove(),(dur+delay)*1000+400);
+    function createConfettiBurst(count = 120) {
+      const colors = ['#c9a84c','#e8c96a','#f5e6a3','#f0e6c8','#d8b85b'];
+
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        p.className = 'confetti';
+        const dur = 3.2 + Math.random() * 2.4;
+        const delay = Math.random() * 0.9;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.width = (6 + Math.random() * 8) + 'px';
+        p.style.height = (12 + Math.random() * 16) + 'px';
+        p.style.background = color;
+        p.style.borderRadius = Math.random() > 0.5 ? '2px' : '50%';
+        p.style.animationDuration = dur + 's';
+        p.style.animationDelay = delay + 's';
+        p.style.transform = `translateY(-20px) rotate(${Math.random() * 360}deg)`;
+
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), (dur + delay) * 1000 + 400);
       }
     }
-    window.addEventListener('load',()=>setTimeout(()=>createConfettiBurst(140),250));
 
-    /* ── Sender note ── */
-    const revealNoteFeatureBtn=document.getElementById('reveal-note-feature');
-    const senderNotePanel=document.getElementById('sender-note-panel');
-    const unlockSenderNoteBtn=document.getElementById('unlock-sender-note');
-    const senderPassInput=document.getElementById('sender-pass');
-    const senderPassWrap=document.getElementById('sender-pass-wrap');
-    const senderComposeWrap=document.getElementById('sender-compose-wrap');
-    const senderMessageInput=document.getElementById('sender-message');
-    const senderStatus=document.getElementById('sender-status');
-    const sendSenderMessageBtn=document.getElementById('send-sender-message');
-    const sendAnotherMessageBtn=document.getElementById('send-another-message');
-    const SENDER_PASSCODE='vaishnavi';
+    window.addEventListener('load', () => setTimeout(() => createConfettiBurst(140), 250));
 
-    revealNoteFeatureBtn.addEventListener('click',()=>{
+    const revealNoteFeatureBtn = document.getElementById('reveal-note-feature');
+    const senderNotePanel = document.getElementById('sender-note-panel');
+    const senderMessageInput = document.getElementById('sender-message');
+    const senderStatus = document.getElementById('sender-status');
+    const sendSenderMessageBtn = document.getElementById('send-sender-message');
+    const sendAnotherMessageBtn = document.getElementById('send-another-message');
+
+    revealNoteFeatureBtn.addEventListener('click', () => {
       senderNotePanel.classList.add('open');
-      senderNotePanel.scrollIntoView({behavior:'smooth',block:'center'});
+      senderNotePanel.scrollIntoView({ behavior:'smooth', block:'center' });
+      setTimeout(() => senderMessageInput.focus(), 400);
     });
-    unlockSenderNoteBtn.addEventListener('click',()=>{
-      const entered=senderPassInput.value.trim();
-      if(!entered){ senderStatus.textContent='Enter the word first.'; return; }
-      if(entered.toLowerCase()===SENDER_PASSCODE.toLowerCase()){
-        senderPassWrap.style.display='none'; senderComposeWrap.classList.add('open');
-        senderStatus.textContent='Your message will remain unnamed.'; senderMessageInput.focus();
-      } else { senderStatus.textContent='That word does not open this.'; }
-    });
-    async function sendSenderMessage(){
-      const message=senderMessageInput.value.trim();
-      if(!message){ senderStatus.textContent='Write a message first.'; return; }
-      sendSenderMessageBtn.disabled=true; sendSenderMessageBtn.style.opacity='0.6';
-      senderStatus.textContent='Sending quietly...';
-      try{
-        const response=await fetch('/api/private-message',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message,passcode:senderPassInput.value})});
-        const result=await response.json();
-        if(!response.ok) throw new Error(result.error||'Failed to send.');
-        senderMessageInput.value=''; senderStatus.textContent='Your message was sent quietly.'; sendAnotherMessageBtn.classList.add('show');
-      } catch(error){
-        senderStatus.textContent='Something went wrong. Please try again.';
+
+    async function sendSenderMessage() {
+      const message = senderMessageInput.value.trim();
+
+      if (!message) {
+        senderStatus.textContent = 'Write a message first.';
+        return;
+      }
+
+      sendSenderMessageBtn.disabled = true;
+      sendSenderMessageBtn.style.opacity = '0.6';
+      senderStatus.textContent = 'Sending quietly...';
+
+      try {
+        const response = await fetch('/api/private-message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error || 'Failed to send.');
+        }
+
+        senderMessageInput.value = '';
+        senderStatus.textContent = 'Your message was sent quietly.';
+        sendAnotherMessageBtn.classList.add('show');
+      } catch (error) {
+        senderStatus.textContent = 'Something went wrong. Please try again.';
       } finally {
-        sendSenderMessageBtn.disabled=false; sendSenderMessageBtn.style.opacity='1';
+        sendSenderMessageBtn.disabled = false;
+        sendSenderMessageBtn.style.opacity = '1';
       }
     }
-    sendSenderMessageBtn.addEventListener('click',sendSenderMessage);
-    sendAnotherMessageBtn.addEventListener('click',()=>{ senderMessageInput.value=''; senderMessageInput.focus(); senderStatus.textContent='You can leave another message.'; });
+
+    sendSenderMessageBtn.addEventListener('click', sendSenderMessage);
+
+    sendAnotherMessageBtn.addEventListener('click', () => {
+      senderMessageInput.value = '';
+      senderMessageInput.focus();
+      senderStatus.textContent = 'You can leave another message.';
+    });
   </script>
 </body>
 </html>
