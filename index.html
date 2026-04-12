@@ -738,7 +738,7 @@
 
       sendSenderMessageBtn.disabled = true;
       sendSenderMessageBtn.style.opacity = '0.6';
-      senderStatus.textContent = 'Sending quietly...';
+      senderStatus.textContent = 'Sending ...';
 
       try {
         const response = await fetch('/api/private-message', {
@@ -754,7 +754,7 @@
         }
 
         senderMessageInput.value = '';
-        senderStatus.textContent = 'Your message was sent quietly.';
+        senderStatus.textContent = 'Your message was sent.';
         sendAnotherMessageBtn.classList.add('show');
       } catch (error) {
         senderStatus.textContent = 'Something went wrong. Please try again.';
