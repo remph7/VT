@@ -397,6 +397,59 @@
       .msg-box { padding:2.1rem 1.5rem; }
       .gold-line { max-width:80vw; }
     }
+    .scroll-down {
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  color:rgba(201,168,76,0.75);
+  font-size:0.7rem;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:opacity 0.4s ease;
+}
+
+.scroll-down span {
+  display:block;
+  margin-bottom:6px;
+}
+
+.arrow {
+  width:14px;
+  height:14px;
+  border-left:1.5px solid var(--gold);
+  border-bottom:1.5px solid var(--gold);
+  transform:rotate(-45deg);
+  margin:auto;
+
+  box-shadow: 
+    0 0 6px rgba(245,230,163,0.6),
+    0 0 12px rgba(245,230,163,0.4),
+    0 0 18px rgba(245,230,163,0.25);
+
+  animation:arrowMoveGlow 1.6s infinite ease-in-out;
+}
+
+@keyframes arrowMoveGlow {
+  0% {
+    transform:rotate(-45deg) translateY(0);
+    opacity:0.6;
+  }
+  50% {
+    transform:rotate(-45deg) translateY(8px);
+    opacity:1;
+    box-shadow: 
+      0 0 10px rgba(245,230,163,0.9),
+      0 0 20px rgba(245,230,163,0.6),
+      0 0 30px rgba(245,230,163,0.4);
+  }
+  100% {
+    transform:rotate(-45deg) translateY(0);
+    opacity:0.6;
+  }
+}
   </style>
 </head>
 <body>
@@ -404,12 +457,17 @@
   <div id="cursor"></div>
   <div id="cursor-ring"></div>
 
-  <section id="hero">
-    <div class="hero-birthday">Happy Birthday</div>
-    <div class="hero-name">Vaishnavi</div>
-    <div class="gold-line" style="animation-delay:1.6s;"></div>
-  </section>
+<section id="hero">
+  <div class="hero-birthday">Happy Birthday</div>
+  <div class="hero-name">Vaishnavi</div>
+  <div class="gold-line" style="animation-delay:1.6s;"></div>
 
+  <!-- ✅ MOVE IT HERE -->
+  <div class="scroll-down">
+    <span>scroll</span>
+    <div class="arrow"></div>
+  </div>
+</section>
   <section id="message">
     <div class="msg-box">
       <div class="msg-quote">&ldquo;</div>
@@ -417,7 +475,14 @@
       <div class="msg-sig">&mdash; someone who remembers</div>
     </div>
   </section>
+<section id="parcel">
+  <div class="gold-line" style="animation:none;width:180px;"></div>
 
+  <div class="parcel-box">
+    <p class="parcel-text">Guess it found its way to you.</p>
+    
+  </div>
+</section>
   <section id="closing">
     <div class="gold-line" style="animation:none;width:200px;"></div>
     <br>
@@ -686,9 +751,16 @@
         }, 600);
       }
     }, { threshold: 0.3 });
+window.addEventListener('load', () => {
+  document.querySelector('.msg-box').classList.add('visible');
 
-    msgObs.observe(document.getElementById('message'));
-
+  setTimeout(function type() {
+    if (ti < fullMsg.length) {
+      msgEl.textContent += fullMsg[ti++];
+      setTimeout(type, 22);
+    }
+  }, 1200);
+});
     function createConfettiBurst(count = 120) {
       const colors = ['#c9a84c','#e8c96a','#f5e6a3','#f0e6c8','#d8b85b'];
 
@@ -738,7 +810,7 @@
 
       sendSenderMessageBtn.disabled = true;
       sendSenderMessageBtn.style.opacity = '0.6';
-      senderStatus.textContent = 'Sending ...';
+      senderStatus.textContent = 'Sending quietly...';
 
       try {
         const response = await fetch('/api/private-message', {
@@ -754,7 +826,7 @@
         }
 
         senderMessageInput.value = '';
-        senderStatus.textContent = 'Your message was sent.';
+        senderStatus.textContent = 'Your message was sent quietly.';
         sendAnotherMessageBtn.classList.add('show');
       } catch (error) {
         senderStatus.textContent = 'Something went wrong. Please try again.';
@@ -771,6 +843,21 @@
       senderMessageInput.focus();
       senderStatus.textContent = 'You can leave another message.';
     });
+    const scrollBtn = document.querySelector('.scroll-down');
+
+scrollBtn.addEventListener('click', () => {
+  document.getElementById('message').scrollIntoView({
+    behavior: 'smooth'
+  });
+});
+
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 100) {
+    scrollBtn.style.opacity = '0';
+  } else {
+    scrollBtn.style.opacity = '1';
+  }
+});
   </script>
 </body>
 </html>
